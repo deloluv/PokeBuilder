@@ -1,0 +1,10 @@
+/* Effects */
+.grow-effect { 
+    transition: all .2s ease-in-out; 
+    border-radius: 0 !important;
+}    
+.grow-effect:hover { 
+    transform: scale(1.05); 
+    border: solid;
+    border-color: #29292950;
+}
