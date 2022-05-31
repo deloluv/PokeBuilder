@@ -7,22 +7,52 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link rel="stylesheet" href="../static/css/style.css">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="../static/js/selector.js"></script>
+        <script src="../static/js/builder.js"></script>
     </head>
     <body>
         <!-- Navbar Header -->
         <nav class="navbar navbar-expand-lg sticky-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="{{ url_for('static', filename='/imgs/Logo.png') }}" alt="">
-                    <!-- <img src="../static/imgs/Logo.png" alt=""> -->
+                    <img src="{{ url_for('static', filename='/imgs/logo.png') }}" alt="">
+                    <!-- <img src="../static/imgs/logo.png" alt=""> -->
                 </a>
                 <button type="button" class="btn btn-light">Clear Pokémon Team</button>
             </div>
         </nav>
+        <!-- PokéTeam -->
+        <div class="container-fluid pt-3 pb-3">
+            <div id="poke_team" class="row row-cols-6 pt-2 gx-5">
+                {% for i in range(6) %}
+                <div class="col-6 col-sm-4 col-md-4 col-lg-2 box-shadow-effect p-3 unused">
+                    <img class="mx-auto d-block" src="../static/imgs/pokeball.png">
+                    <!-- <div class="container rounded" style="background-color: white;">
+                        <p class="text-center">type</p>
+                    </div>
+                    <p class="text-center">id</p>
+                    <p class="text-center">name</p>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="container rounded" style="background-color: white;">
+                                    <p class="text-center">Super Effective</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="container rounded" style="background-color: white;">
+                                    <p class="text-center">Not Effective</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <!-- PokéGrid -->
-        <div class="container">
-            <div class="row row-cols-6">
+        <div class="container pt-3">
+            <h3 class="text-center">Pokédex</h3>
+            <div id="pokedex" class="row row-cols-6">
                 {% for pokemon in MainPokeData %}
                     <a id="poke{{ pokemon['id'] }}" class="col-6 col-sm-4 col-md-4 col-lg-2 grow-effect btn" role="button" onclick="onSelect({{ pokemon }}, this.id)">
                         <img class="mx-auto d-block" src="{{ pokemon['img'] }}">
