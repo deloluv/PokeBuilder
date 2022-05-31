@@ -1,7 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Poké Builder</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    </head>
     <body>
-        <p>{{ AllNames }}</p>
-        <p>{{ AllIDs }}</p>
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-expand-lg sticky-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="{{ url_for('static', filename='/imgs/Logo.png') }}" alt="">
+                    <!-- <img src="../static/imgs/Logo.png" alt=""> -->
+                </a>
+                <button type="button" class="btn btn-light">Clear Pokémon Team</button>
+            </div>
+        </nav>
+        <!-- PokéGrid -->
+        <div class="container">
+            <div class="row row-cols-6">
+                {% for pokemon in MainPokeData %}
+                    <div class="col border">
+                        <img class="mx-auto d-block" src="{{ pokemon['img'] }}">
+                        <p class="text-center">#{{ pokemon['id'] }}</p>
+                        <p class="text-center">{{ pokemon['name'] }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Bootstrap Popper + JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     </body>
 </html>
