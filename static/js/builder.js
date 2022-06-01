@@ -191,6 +191,7 @@ function removeAll() {
         // Reset Pokedex Selections 
         d3.selectAll('.selected')
             .style('background-color', 'white')
+            .style('border-color', 'white')
             .classed('selected', false);
     };
 };
