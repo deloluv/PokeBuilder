@@ -17,34 +17,37 @@
                     <img src="{{ url_for('static', filename='/imgs/logo.png') }}" alt="">
                     <!-- <img src="../static/imgs/logo.png" alt=""> -->
                 </a>
-                <button type="button" class="btn btn-light">Clear Pokémon Team</button>
+                <button type="button" class="btn btn-light" onclick="removeAll()">Clear Pokémon Team</button>
             </div>
         </nav>
         <!-- PokéTeam -->
         <div class="container-fluid pt-3 pb-3">
             <div id="poke_team" class="row row-cols-6 pt-2 gx-5">
                 {% for i in range(6) %}
-                <div class="col-6 col-sm-4 col-md-4 col-lg-2 box-shadow-effect p-3 unused">
-                    <img class="mx-auto d-block" src="../static/imgs/pokeball.png">
-                    <!-- <div class="container rounded" style="background-color: white;">
-                        <p class="text-center">type</p>
-                    </div>
-                    <p class="text-center">id</p>
-                    <p class="text-center">name</p>
+                <div class="col-6 col-sm-4 col-md-4 col-lg-2 box-shadow-effect p-3 team-unused">
+                    <img id="team-sprite" class="mx-auto d-block" src="../static/imgs/pokeball.png">
+                    <div id="team-type"></div>
+                    <div id="team-name"></div>
                     <div class="container">
                         <div class="row">
                             <div class="col">
                                 <div class="container rounded" style="background-color: white;">
                                     <p class="text-center">Super Effective</p>
                                 </div>
+                                <div id="supereff-team">
+                                    <!-- Super Effective To -->
+                                </div>
                             </div>
                             <div class="col">
                                 <div class="container rounded" style="background-color: white;">
                                     <p class="text-center">Not Effective</p>
                                 </div>
+                                <div id="noteff-team">
+                                    <!-- Not Effective To -->
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 {% endfor %}
             </div>
