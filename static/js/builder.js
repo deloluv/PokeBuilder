@@ -80,26 +80,50 @@ function checkAvailability() {
 
 // IN PROGRESS
 async function calculateEffectiveness(type_list) {
-    function extractNames(arr) {
-        let names = [];
+    function extractNames(arr, type) {
+        // Pull Names from Object
+        let final = [];
         for (let i = 0; i < arr.length; i++) {
-            let name = arr[i]['name'];
-            names.push(name);
+            if (type == 'type') {
+                final.push(arr[i]['type']['name']);
+            } else {
+                final.push(arr[i]['name']);
+            };
         };
-        return names;
+        return final;
     };
+    const TYPE_NAMES = extractNames(type_list, 'type');
     if (type_list.length > 1) {
-        return [];
+        // 2 Typed Pokemon
+        const ALL_STRONG = [];
+        const ALL_WEAK = [];
+        for (let i = 0; i < type_list.length; i++) {
+            const TYPE = type_list[i]['type']['name'];
+            await checkDataStore('types', TYPE);
+            const DAMAGE = DATASTORE['types'][TYPE]['damage_relations'];
+            const DOUBLE_TO = extractNames(DAMAGE['double_damage_to']);
+            const HALF_TO = extractNames(DAMAGE['half_damage_to']);
+            for (let n = 0; n < DOUBLE_TO.length; n++) {
+                if (TYPE_NAMES.find(e => e == DOUBLE_TO[n])) { 
+                    if (DOUBLE_TO[n] != 'dragon' && DOUBLE_TO[n] != 'ghost') { continue };
+                };
+                ALL_STRONG.push(DOUBLE_TO[n]);
+            };
+            for (let n = 0; n < HALF_TO.length; n++) {
+                if (TYPE_NAMES.find(e => e == HALF_TO[n])) { continue };
+                ALL_WEAK.push(HALF_TO[n]);
+            };
+        };
+        const STRONG = [...new Set(ALL_STRONG)];
+        const WEAK = [...new Set(ALL_WEAK)];
+        return [STRONG, WEAK];
     } else {
+        // 1 Type Pokemon
         const TYPE = type_list[0]['type']['name'];
         await checkDataStore('types', TYPE);
         const DAMAGE = DATASTORE['types'][TYPE]['damage_relations'];
-        const DOUBLE_FROM = extractNames(DAMAGE['double_damage_from']);
         const DOUBLE_TO = extractNames(DAMAGE['double_damage_to']);
-        const HALF_FROM = extractNames(DAMAGE['half_damage_from']);
         const HALF_TO = extractNames(DAMAGE['half_damage_to']);
-        const NONE_FROM = extractNames(DAMAGE['no_damage_from']);
-        const NONE_TO = extractNames(DAMAGE['no_damage_to']);
         const STRONG = DOUBLE_TO;
         const WEAK = HALF_TO;
         return [STRONG, WEAK];
@@ -119,16 +143,13 @@ async function addToTeam(name) {
     const TEAM_NAME = TEAM_SPOT.select('#team-name');
     const TEAM_EFFECTIVENESS = TEAM_SPOT.select('#team-effectiveness')
         .append('div')
-        .classed('row', true)
-        // .classed('p-1', true)
-        // .classed('gap-1', true);
+        .classed('row', true);
     // Data
     const POKEMON = DATASTORE['pokemon'][name.toLowerCase()];
     const POKE_SPRITE = POKEMON['img'];
     const POKE_TYPE = POKEMON['types'];
     const POKE_NAME = POKEMON['name'];
     const EFFECTIVENESS = await calculateEffectiveness(POKE_TYPE);
-    
     // Name
     TEAM_NAME.append('span')
         .classed('text-center', true)
@@ -164,10 +185,9 @@ async function addToTeam(name) {
         .classed('text-center', true);
     STRONG_EFFECTIVENESS_CARD.append('span')
         .classed('text-dark', true)
-        // .classed('text-uppercase', true)
         .classed('fw-semibold', true)
         .classed('fs-6', true)
-        .text('Super Effective');
+        .text('Very Effective');
     if (STRONG.length < 1) {
         STRONG_EFFECTIVENESS_CARD.append('div')
             .classed('col', true)
@@ -209,7 +229,6 @@ async function addToTeam(name) {
         .classed('text-center', true);
     WEAK_EFFECTIVENESS_CARD.append('span')
         .classed('text-dark', true)
-        .classed('text-uppercase', true)
         .classed('fw-semibold', true)
         .classed('fs-6', true)
         .text('Not Effective');
