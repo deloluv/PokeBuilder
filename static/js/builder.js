@@ -79,13 +79,35 @@ function checkAvailability() {
 };
 
 // IN PROGRESS
-function calculateEffectiveness(type_list) {
-
-    return [];
+async function calculateEffectiveness(type_list) {
+    function extractNames(arr) {
+        let names = [];
+        for (let i = 0; i < arr.length; i++) {
+            let name = arr[i]['name'];
+            names.push(name);
+        };
+        return names;
+    };
+    if (type_list.length > 1) {
+        return [];
+    } else {
+        const TYPE = type_list[0]['type']['name'];
+        await checkDataStore('types', TYPE);
+        const DAMAGE = DATASTORE['types'][TYPE]['damage_relations'];
+        const DOUBLE_FROM = extractNames(DAMAGE['double_damage_from']);
+        const DOUBLE_TO = extractNames(DAMAGE['double_damage_to']);
+        const HALF_FROM = extractNames(DAMAGE['half_damage_from']);
+        const HALF_TO = extractNames(DAMAGE['half_damage_to']);
+        const NONE_FROM = extractNames(DAMAGE['no_damage_from']);
+        const NONE_TO = extractNames(DAMAGE['no_damage_to']);
+        const STRONG = DOUBLE_TO;
+        const WEAK = HALF_TO;
+        return [STRONG, WEAK];
+    };
 };
 
 // IN PROGRESS
-function addToTeam(name) {
+async function addToTeam(name) {
     // Selections
     const TEAM_BUILD = d3.select('#poke_team');
     const TEAM_SPOT = TEAM_BUILD.select('.team-unused')
@@ -95,13 +117,17 @@ function addToTeam(name) {
     const TEAM_SPRITE = TEAM_SPOT.select('#team-sprite');
     const TEAM_TYPE = TEAM_SPOT.select('#team-type');
     const TEAM_NAME = TEAM_SPOT.select('#team-name');
-    const TEAM_SUPEREFF = TEAM_SPOT.select('#supereff-team');
-    const TEAM_NOTEFF = TEAM_SPOT.select('#noteff-team');
+    const TEAM_EFFECTIVENESS = TEAM_SPOT.select('#team-effectiveness')
+        .append('div')
+        .classed('row', true)
+        // .classed('p-1', true)
+        // .classed('gap-1', true);
     // Data
     const POKEMON = DATASTORE['pokemon'][name.toLowerCase()];
     const POKE_SPRITE = POKEMON['img'];
     const POKE_TYPE = POKEMON['types'];
     const POKE_NAME = POKEMON['name'];
+    const EFFECTIVENESS = await calculateEffectiveness(POKE_TYPE);
     
     // Name
     TEAM_NAME.append('span')
@@ -131,8 +157,95 @@ function addToTeam(name) {
             .classed('fw-bold', true)
             .text(curType);
     };
-    // Super Effective
-    // Not Effective
+    // Strong Against
+    const STRONG = EFFECTIVENESS[0];
+    const STRONG_EFFECTIVENESS_CARD = TEAM_EFFECTIVENESS.append('div')
+        .classed('col', true)
+        .classed('text-center', true);
+    STRONG_EFFECTIVENESS_CARD.append('span')
+        .classed('text-dark', true)
+        // .classed('text-uppercase', true)
+        .classed('fw-semibold', true)
+        .classed('fs-6', true)
+        .text('Super Effective');
+    if (STRONG.length < 1) {
+        STRONG_EFFECTIVENESS_CARD.append('div')
+            .classed('col', true)
+            .classed('rounded', true)
+            .classed('text-center', true)
+            .classed('border', true)
+            .classed('border-2', true)
+            .classed('super-effective', true)
+            .classed('box-shadow-effect', true)
+            .style('background-color', 'black')
+            .append('span')
+            .classed('text-light', true)
+            .classed('text-uppercase', true)
+            .classed('fw-bold', true)
+            .text('N/A');
+    };
+    for (let i = 0; i < STRONG.length; i++) {
+        let typeHex = DATASTORE['types'][STRONG[i]]['color'];
+        STRONG_EFFECTIVENESS_CARD.append('div')
+            .classed('col', true)
+            .classed('rounded', true)
+            .classed('text-center', true)
+            .classed('border', true)
+            .classed('border-2', true)
+            .classed('super-effective', true)
+            .classed('box-shadow-effect', true)
+            .style('background-color', typeHex)
+            .append('span')
+            .classed('text-light', true)
+            .classed('text-uppercase', true)
+            .classed('fw-bold', true)
+            .classed('fs-6', true)
+            .text(STRONG[i]);
+    };
+    // Weak Against
+    const WEAK = EFFECTIVENESS[1];
+    const WEAK_EFFECTIVENESS_CARD = TEAM_EFFECTIVENESS.append('div')
+        .classed('col', true)
+        .classed('text-center', true);
+    WEAK_EFFECTIVENESS_CARD.append('span')
+        .classed('text-dark', true)
+        .classed('text-uppercase', true)
+        .classed('fw-semibold', true)
+        .classed('fs-6', true)
+        .text('Not Effective');
+    if (WEAK.length < 1) {
+        WEAK_EFFECTIVENESS_CARD.append('div')
+            .classed('col', true)
+            .classed('rounded', true)
+            .classed('text-center', true)
+            .classed('border', true)
+            .classed('border-2', true)
+            .classed('not-effective', true)
+            .classed('box-shadow-effect', true)
+            .style('background-color', 'black')
+            .append('span')
+            .classed('text-light', true)
+            .classed('text-uppercase', true)
+            .classed('fw-bold', true)
+            .text('N/A');
+    };
+    for (let i = 0; i < WEAK.length; i++) {
+        let typeHex = DATASTORE['types'][WEAK[i]]['color'];
+        WEAK_EFFECTIVENESS_CARD.append('div')
+            .classed('col', true)
+            .classed('rounded', true)
+            .classed('text-center', true)
+            .classed('border', true)
+            .classed('border-2', true)
+            .classed('not-effective', true)
+            .classed('box-shadow-effect', true)
+            .style('background-color', typeHex)
+            .append('span')
+            .classed('text-light', true)
+            .classed('text-uppercase', true)
+            .classed('fw-bold', true)
+            .text(WEAK[i]);
+    };
 };
 
 // IN PROGRESS
@@ -142,6 +255,7 @@ function removeFromTeam(pokemon) {
     const SPOT = TEAM_BUILD.select(`#${pokemon}`)
         .classed('team-unused', true)
         .classed('team-used', false)
+        .attr('id', '')
         .html("");
     // Reset Name
     SPOT.append('div')
@@ -157,12 +271,14 @@ function removeFromTeam(pokemon) {
     SPOT.append('div')
         .classed('container', true)
         .attr('id', 'team-type'); 
-    // Reset Super Effective
-    // Reset Not Effective  
+    // Reset Effectiveness
+    SPOT.append('div')
+        .classed('container', true)
+        .attr('id', 'team-effectiveness')
 };
 
 // IN PROGRESS
-function removeAll() {
+function removeAll() { 
     const TEAM_BUILD = d3.select('#poke_team').html("");
     for (let i = 0; i < 6; i++) {
         // Reset Card
@@ -188,6 +304,10 @@ function removeAll() {
         SPOT.append('div')
             .classed('container', true)
             .attr('id', 'team-type'); 
+        // Reset Effectiveness
+        SPOT.append('div')
+            .classed('container', true)
+            .attr('id', 'team-effectiveness')
         // Reset Pokedex Selections 
         d3.selectAll('.selected')
             .style('background-color', 'white')
@@ -198,6 +318,7 @@ function removeAll() {
 
 // COMPLETE
 async function onSelect(pokemon, elementID) {
+    console.log(DATASTORE)
     const CUR_POKEMON = d3.select(`#${elementID}`);
     if (CUR_POKEMON.classed('selected')) {
         // Deselecting
