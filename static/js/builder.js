@@ -374,7 +374,7 @@ function filterSearch(query) {
     const POKEDEX_VALUES = POKEDEX['_groups'][0];
     for (let i = 0; i < POKEDEX_VALUES.length; i++) {
         let curID = POKEDEX_VALUES[i]['id'].slice(4);
-        let curName = POKEDEX_VALUES[i]['children']['poke-name']['innerHTML'];
+        let curName = POKEDEX_VALUES[i]['children']['poke-name']['innerHTML'].toLowerCase();
         if (!isNaN(query)) {
             if (!curID.startsWith(query)) {
                 d3.select(`#poke${curID}`).style('display', 'none');

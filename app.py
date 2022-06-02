@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 import static.py.functions as PokeData
 
 # Create an instance of our Flask app
