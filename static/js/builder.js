@@ -78,7 +78,7 @@ function checkAvailability() {
     } else { return true; };
 };
 
-// IN PROGRESS
+// COMPLETE
 async function calculateEffectiveness(type_list) {
     function extractNames(arr, type) {
         // Pull Names from Object
@@ -130,7 +130,7 @@ async function calculateEffectiveness(type_list) {
     };
 };
 
-// IN PROGRESS
+// COMPLETE
 async function addToTeam(name) {
     // Selections
     const TEAM_BUILD = d3.select('#poke_team');
@@ -139,6 +139,7 @@ async function addToTeam(name) {
         .classed('team-used', true)
         .attr('id', name);
     const TEAM_SPRITE = TEAM_SPOT.select('#team-sprite');
+    const TEAM_BREAK = TEAM_SPOT.select('#team-break');
     const TEAM_TYPE = TEAM_SPOT.select('#team-type');
     const TEAM_NAME = TEAM_SPOT.select('#team-name');
     const TEAM_EFFECTIVENESS = TEAM_SPOT.select('#team-effectiveness')
@@ -157,6 +158,8 @@ async function addToTeam(name) {
         .text(POKE_NAME);
     // Sprite
     TEAM_SPRITE.attr('src', POKE_SPRITE);
+    // Break
+    TEAM_BREAK.append('hr');
     // Type
     const TEAM_TYPE_SPOT = TEAM_TYPE.append('div')
         .classed('row', true)
@@ -267,7 +270,7 @@ async function addToTeam(name) {
     };
 };
 
-// IN PROGRESS
+// COMPLETE
 function removeFromTeam(pokemon) {
     const TEAM_BUILD = d3.select('#poke_team');
     // Used Class Tag
@@ -280,23 +283,26 @@ function removeFromTeam(pokemon) {
     SPOT.append('div')
         .attr('id', 'team-name')
         .classed('text-center', true); 
+    // Reset Type
+    SPOT.append('div')
+        .classed('container', true)
+        .attr('id', 'team-type'); 
     // Reset Img
     SPOT.append('img')
         .attr('id', 'team-sprite')
         .classed('mx-auto', true)
         .classed('d-block', true)
         .attr('src', '/static/imgs/pokeball.png');
-    // Reset Type
+    // Break
     SPOT.append('div')
-        .classed('container', true)
-        .attr('id', 'team-type'); 
+        .attr('id', 'team-break');
     // Reset Effectiveness
     SPOT.append('div')
         .classed('container', true)
         .attr('id', 'team-effectiveness')
 };
 
-// IN PROGRESS
+// COMPLETE
 function removeAll() { 
     const TEAM_BUILD = d3.select('#poke_team').html("");
     for (let i = 0; i < 6; i++) {
@@ -313,16 +319,19 @@ function removeAll() {
         SPOT.append('div')
             .attr('id', 'team-name')
             .classed('text-center', true);
+        // Reset Type
+        SPOT.append('div')
+            .classed('container', true)
+            .attr('id', 'team-type'); 
         // Reset Img
         SPOT.append('img')
             .attr('id', 'team-sprite')
             .classed('mx-auto', true)
             .classed('d-block', true)
             .attr('src', '/static/imgs/pokeball.png');
-        // Reset Type
+        // Break
         SPOT.append('div')
-            .classed('container', true)
-            .attr('id', 'team-type'); 
+            .attr('id', 'team-break');
         // Reset Effectiveness
         SPOT.append('div')
             .classed('container', true)
@@ -357,4 +366,28 @@ async function onSelect(pokemon, elementID) {
     await checkDataStore('pokemon', pokemon);
     // Update Team
     await addToTeam(pokemon['name']);
+};
+
+// IN PROGRESS
+function filterSearch(query) {
+    const POKEDEX = d3.select('#pokedex').selectAll('a');
+    const POKEDEX_VALUES = POKEDEX['_groups'][0];
+    for (let i = 0; i < POKEDEX_VALUES.length; i++) {
+        let curID = POKEDEX_VALUES[i]['id'].slice(4);
+        let curName = POKEDEX_VALUES[i]['children']['poke-name']['innerHTML'];
+        if (!isNaN(query)) {
+            if (!curID.startsWith(query)) {
+                d3.select(`#poke${curID}`).style('display', 'none');
+            } else {
+                d3.select(`#poke${curID}`).style('display', 'block');
+            };
+        } else {
+            if (!curName.startsWith(query)) {
+                d3.select(`#poke${curID}`).style('display', 'none');
+            } else {
+                d3.select(`#poke${curID}`).style('display', 'block');
+            };
+        };
+        
+    };
 };
