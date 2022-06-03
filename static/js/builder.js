@@ -138,6 +138,10 @@ async function addToTeam(name) {
         .classed('team-unused', false)
         .classed('team-used', true)
         .attr('id', name);
+    const TEAM_REMOVE = TEAM_SPOT.select('#team-remove')
+        .append('div')
+        .classed('row', true)
+        .classed('p-2', true);
     const TEAM_SPRITE = TEAM_SPOT.select('#team-sprite');
     const TEAM_BREAK = TEAM_SPOT.select('#team-break');
     const TEAM_TYPE = TEAM_SPOT.select('#team-type');
@@ -151,6 +155,22 @@ async function addToTeam(name) {
     const POKE_TYPE = POKEMON['types'];
     const POKE_NAME = POKEMON['name'];
     const EFFECTIVENESS = await calculateEffectiveness(POKE_TYPE);
+    // Remove Button
+    TEAM_REMOVE.append('button')
+        .classed('col', true)
+        .classed('rounded', true)
+        .classed('text-center', true)
+        .classed('border', true)
+        .classed('border-2', true)
+        .attr('type', 'button')
+        .attr('onclick', `removeFromTeam('${name}')`)
+        .classed('btn', true)
+        .style('background-color', 'white')
+        .append('span')
+        .style('color', 'red')
+        .classed('text-uppercase', true)
+        .classed('fw-bold', true)
+        .text('X');
     // Name
     TEAM_NAME.append('span')
         .classed('text-center', true)
@@ -272,6 +292,13 @@ async function addToTeam(name) {
 
 // COMPLETE
 function removeFromTeam(pokemon) {
+    const POKE_ID = DATASTORE['pokemon'][pokemon.toLowerCase()]['id'];
+    if (d3.select(`#poke${POKE_ID}`).classed('selected')) {
+        d3.select(`#poke${POKE_ID}`)
+            .style('background-color', 'white')
+            .style('border-color', 'white')
+            .classed('selected', false);
+    };
     const TEAM_BUILD = d3.select('#poke_team');
     // Used Class Tag
     const SPOT = TEAM_BUILD.select(`#${pokemon}`)
@@ -279,9 +306,14 @@ function removeFromTeam(pokemon) {
         .classed('team-used', false)
         .attr('id', '')
         .html("");
+    // Reset Remove
+    SPOT.append('div')
+        .classed('container', true)
+        .attr('id', 'team-remove');
     // Reset Name
     SPOT.append('div')
         .attr('id', 'team-name')
+        .classed('p-2', true)
         .classed('text-center', true); 
     // Reset Type
     SPOT.append('div')
@@ -299,7 +331,7 @@ function removeFromTeam(pokemon) {
     // Reset Effectiveness
     SPOT.append('div')
         .classed('container', true)
-        .attr('id', 'team-effectiveness')
+        .attr('id', 'team-effectiveness');
 };
 
 // COMPLETE
@@ -315,9 +347,14 @@ function removeAll() {
             .classed('col-lg-2', true)
             .classed('box-shadow-effect', true)
             .classed('p-3', true);
+        // Reset Remove
+        SPOT.append('div')
+            .classed('container', true)
+            .attr('id', 'team-remove');
         // Reset Name
         SPOT.append('div')
             .attr('id', 'team-name')
+            .classed('p-2', true)
             .classed('text-center', true);
         // Reset Type
         SPOT.append('div')
@@ -335,7 +372,7 @@ function removeAll() {
         // Reset Effectiveness
         SPOT.append('div')
             .classed('container', true)
-            .attr('id', 'team-effectiveness')
+            .attr('id', 'team-effectiveness');
         // Reset Pokedex Selections 
         d3.selectAll('.selected')
             .style('background-color', 'white')
@@ -355,7 +392,7 @@ async function onSelect(pokemon, elementID) {
             .classed('selected', false);
         removeFromTeam(pokemon['name'])
         return
-    }
+    };
     // Check Space on Team
     if (!checkAvailability()) { return };
     // Select
@@ -368,7 +405,7 @@ async function onSelect(pokemon, elementID) {
     await addToTeam(pokemon['name']);
 };
 
-// IN PROGRESS
+// COMPLETE
 function filterSearch(query) {
     const POKEDEX = d3.select('#pokedex').selectAll('a');
     const POKEDEX_VALUES = POKEDEX['_groups'][0];

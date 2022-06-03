@@ -14,8 +14,7 @@
         <nav class="navbar navbar-expand-lg sticky-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="{{ url_for('static', filename='imgs/logo.png') }}" alt="">
-                    <!-- <img src="../static/imgs/logo.png" alt=""> -->
+                    <img src="../static/imgs/logo.png" alt="">
                 </a>
                 <button type="button" class="btn btn-light" onclick="removeAll()">Clear Pokémon Team</button>
             </div>
@@ -25,7 +24,8 @@
             <div id="poke_team" class="row row-cols-6 pt-2 gx-5">
                 {% for i in range(6) %}
                 <div class="col-6 col-sm-4 col-md-4 col-lg-2 box-shadow-effect p-3 team-unused">
-                    <div id="team-name" class="text-center"></div>
+                    <div id="team-remove" class="container"></div>
+                    <div id="team-name" class="text-center p-2"></div>
                     <div id="team-type" class="container"></div>
                     <img id="team-sprite" class="mx-auto d-block" src="../static/imgs/pokeball.png">
                     <div id="team-break"></div>
@@ -45,8 +45,8 @@
                 {% for pokemon in MainPokeData %}
                     <a id="poke{{ pokemon['id'] }}" class="col-6 col-sm-4 col-md-4 col-lg-2 grow-effect btn" role="button" onclick="onSelect({{ pokemon }}, this.id)">
                         <img class="mx-auto d-block" src="{{ pokemon['img'] }}">
-                        <p id="poke-id" class="text-center">#{{ pokemon['id'] }}</p>
-                        <p id="poke-name" class="text-center">{{ pokemon['name'] }}</p>
+                        <p id="poke-id" class="text-center fw-bold">#{{ pokemon['id'] }}</p>
+                        <p id="poke-name" class="text-center fw-bold">{{ pokemon['name'] }}</p>
                     </a>
                 {% endfor %}
             </div>
