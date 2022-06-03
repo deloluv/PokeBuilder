@@ -3,7 +3,26 @@ import requests
 # VARS
 mainUrl = 'https://pokeapi.co/api/v2/'
 total_pokemon = 898
-
+colors = {
+    'normal':{'color':'#A8A77A'},
+    'fire':{'color':'#EE8130'},
+    'water':{'color':'#6390F0'},
+    'electric':{'color':'#F7D02C'},
+    'grass':{'color':'#7AC74C'},
+    'ice':{'color':'#96D9D6'},
+    'fighting':{'color':'#C22E28'},
+    'poison':{'color':'#A33EA1'},
+    'ground':{'color':'#E2BF65'},
+    'flying':{'color':'#A98FF3'},
+    'psychic':{'color':'#F95587'},
+    'bug':{'color':'#A6B91A'},
+    'rock':{'color':'#B6A136'},
+    'ghost':{'color':'#735797'},
+    'dragon':{'color':'#6F35FC'},
+    'dark':{'color':'#705746'},
+    'steel':{'color':'#B7B7CE'},
+    'fairy':{'color':'#D685AD'}
+}
 # FUNCTIONS
 def load_all():
     # Load all Poké data
@@ -20,3 +39,21 @@ def load_all():
             MainPokeData[i]['img'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{curID}.png"
             MainPokeData[i]['name'] = MainPokeData[i]['name'].capitalize()
     return [AllPokeData, MainPokeData]
+
+def load_team(poke1, poke2, poke3, poke4, poke5, poke6):
+    Team = [poke1, poke2, poke3, poke4, poke5, poke6]
+    TeamPokemon = []
+    for i in range(len(Team)):
+        query = Team[i]
+        if (query == False): 
+            print('FALSE')
+            TeamPokemon.append('False')
+            continue
+        data = requests.get(f'{mainUrl}pokemon/{query.lower()}').json()
+        TeamPokemon.append({
+            'name':data['name'].capitalize(),
+            'id':str(data['id']),
+            'types':data['types'],
+            'img':f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{data['id']}.png"
+        })
+    return TeamPokemon
