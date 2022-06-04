@@ -84,25 +84,31 @@ function checkAvailability() {
 
 // IN PROGRESS
 function updateTeamURL(pokemon, add) {
-    const USED_POKEMON = DATASTORE['url']['pokemon'];
+    let usedPokemon = DATASTORE['url']['pokemon'];
     const MAIN_URL = DATASTORE['url']['main'].split("team/").shift();
+    if (pokemon == 'All') {
+        usedPokemon = [];
+        DATASTORE['url']['pokemon'] = [];
+        d3.select('#team-url-container')
+            .style('display', 'none');
+    };
     if (!add) {
-        for (let i = 0; i < USED_POKEMON.length; i++) {
-            if (USED_POKEMON[i] == pokemon) {
-                USED_POKEMON.splice(i, 1);
+        for (let i = 0; i < usedPokemon.length; i++) {
+            if (usedPokemon[i] == pokemon) {
+                usedPokemon.splice(i, 1);
             };
         };
     } else {
-        USED_POKEMON.push(pokemon);
+        usedPokemon.push(pokemon);
     };
-    if (USED_POKEMON < 1) {
+    if (usedPokemon < 1) {
         d3.select('#team-url-container')
             .style('display', 'none');
     } else {
         d3.select('#team-url-container')
             .style('display', 'block');
     };
-    const FINAL_URL = `${MAIN_URL}team/${USED_POKEMON.join('/')}`
+    const FINAL_URL = `${MAIN_URL}team/${usedPokemon.join('/')}`
     d3.select('#specific-url')
         .attr('href', FINAL_URL)
         .text(FINAL_URL);
@@ -413,7 +419,7 @@ function removeAll() {
             .classed('container', true)
             .attr('id', 'team-effectiveness');
         // Reset URL
-        updateTeamURL(pokemon, false);
+        updateTeamURL('All', false);
         // Reset Pokedex Selections 
         d3.selectAll('.selected')
             .style('background-color', 'white')
