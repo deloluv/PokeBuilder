@@ -1,4 +1,3 @@
-from tkinter.tix import MAIN
 from flask import Flask, render_template
 import static.py.functions as PokeData
 
