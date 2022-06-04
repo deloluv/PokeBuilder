@@ -46,7 +46,6 @@ def load_team(poke1, poke2, poke3, poke4, poke5, poke6):
     for i in range(len(Team)):
         query = Team[i]
         if (query == False): 
-            print('FALSE')
             TeamPokemon.append('False')
             continue
         data = requests.get(f'{mainUrl}pokemon/{query.lower()}').json()

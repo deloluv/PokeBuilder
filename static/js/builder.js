@@ -82,7 +82,7 @@ function checkAvailability() {
     } else { return true; };
 };
 
-// IN PROGRESS
+// COMPLETE
 function updateTeamURL(pokemon, add) {
     let usedPokemon = DATASTORE['url']['pokemon'];
     const MAIN_URL = DATASTORE['url']['main'].split("team/").shift();
@@ -167,7 +167,7 @@ async function calculateEffectiveness(type_list) {
     };
 };
 
-// IN PROGRESS
+// COMPLETE
 async function addToTeam(name) {
     // Selections
     const TEAM_BUILD = d3.select('#poke_team');
@@ -334,7 +334,7 @@ async function addToTeam(name) {
     updateTeamURL(name, true);
 };
 
-// IN PROGRESS
+// COMPLETE
 function removeFromTeam(pokemon) {
     const POKE_ID = DATASTORE['pokemon'][pokemon.toLowerCase()]['id'];
     if (d3.select(`#poke${POKE_ID}`).classed('selected')) {
@@ -379,7 +379,7 @@ function removeFromTeam(pokemon) {
     updateTeamURL(pokemon, false);
 };
 
-// IN PROGRESS
+// COMPLETE
 function removeAll() { 
     const TEAM_BUILD = d3.select('#poke_team').html("");
     for (let i = 0; i < 6; i++) {
@@ -428,7 +428,7 @@ function removeAll() {
     };
 };
 
-// IN PROGRESS
+// COMPLETE
 async function onSelect(pokemon, elementID) {
     console.log(DATASTORE)
     const CUR_POKEMON = d3.select(`#${elementID}`);
@@ -474,6 +474,16 @@ function filterSearch(query) {
         };
         
     };
+};
+
+// IN PROGRESS
+function filterType(query) {
+
+};
+
+// IN PROGRESS
+function filterGen(query) {
+
 };
 
 // COMPLETE
