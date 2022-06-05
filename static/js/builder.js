@@ -85,7 +85,7 @@ function checkAvailability() {
 // COMPLETE
 function updateTeamURL(pokemon, add) {
     let usedPokemon = DATASTORE['url']['pokemon'];
-    const MAIN_URL = DATASTORE['url']['main'].split("team/").shift();
+    const MAIN_URL = DATASTORE['url']['main'].split("team?").shift();
     if (pokemon == 'All') {
         usedPokemon = [];
         DATASTORE['url']['pokemon'] = [];
@@ -108,7 +108,7 @@ function updateTeamURL(pokemon, add) {
         d3.select('#team-url-container')
             .style('display', 'block');
     };
-    const FINAL_URL = `${MAIN_URL}team/${usedPokemon.join('/')}`
+    const FINAL_URL = `${MAIN_URL}team?pokemon=${usedPokemon.join(',')}`
     d3.select('#specific-url')
         .attr('href', FINAL_URL)
         .text(FINAL_URL);

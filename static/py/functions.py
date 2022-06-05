@@ -40,8 +40,13 @@ def load_all():
             MainPokeData[i]['name'] = MainPokeData[i]['name'].capitalize()
     return [AllPokeData, MainPokeData]
 
-def load_team(poke1, poke2, poke3, poke4, poke5, poke6):
-    Team = [poke1, poke2, poke3, poke4, poke5, poke6]
+def load_team(query_list):
+    Team = []
+    for i in range(6):
+        if (i >= len(query_list)):
+            Team.append(False)
+        else:
+            Team.append(query_list[i])
     TeamPokemon = []
     for i in range(len(Team)):
         query = Team[i]
