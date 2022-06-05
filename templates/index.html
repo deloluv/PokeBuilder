@@ -22,7 +22,7 @@
         <!-- Team URL -->
         <div id="team-url-container" class="container" style="display:none;">
             <div class="row pt-3 ps-3 pe-3">
-                <div id="team-url" class="col p-3 text-centered box-shadow-effect text-break">
+                <div id="team-url" class="col p-3 box-shadow-effect text-break">
                     <span class="text-dark fw-bold">Your Team Link: </span>
                 </div>
             </div>
@@ -43,16 +43,34 @@
             </div>
         </div>
         <!-- Filters -->
-        <div class="container p-3" id="filters">
-            <input type="text" id="filter-search" onkeyup="filterSearch(this.value.toLowerCase())" placeholder="Search for Pokémon...">
-            <div class="row p-2 gap-2">
-                <div class="col">
-                    <div class="dropdown">
-                        <a id="type-dropdown-toggle" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" onclick="">Filter by Type</a>
-                        <div class="dropdown-menu p-2">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                <label class="form-check-label" for="inlineCheckbox1">1</label>
+        <div id="filters">
+            <div class="container pt-3 ps-3 pe-3">
+                <input type="text" id="filter-search" onkeyup="filterSearch(this.value.toLowerCase())" placeholder="Search for Pokémon...">
+            </div>
+            <div class="container pb-3 ps-3 pe-3">
+                <div class="row row-cols-2 p-2 gap-2">
+                    <div class="col">
+                        <div class="dropdown">
+                            <a id="type-dropdown-toggle" class="btn dropdown-toggle w-100 border hover-effect" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button">Filter by Type</a>
+                            <div class="dropdown-menu">
+                                <div class="container">
+                                    <div class="row p-2 gap-2">
+                                        <button class="col rounded text-center border border-2 btn bg-dark" type="button" onclick="filterTypeAll(true)">
+                                            <span class="text-uppercase fw-bold text-light">Select All</span>
+                                        </button>
+                                        <button class="col rounded text-center border border-2 btn bg-dark" type="button" onclick="filterTypeAll(false)">
+                                            <span class="text-uppercase fw-bold text-light">Deselect All</span>
+                                        </button>
+                                    </div>
+                                    <div id="filter-type" class="row p-2">
+                                        {% for type in PokeData[2] %}
+                                            <div class="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-2 form-check form-switch form-check-inline">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="type-{{ type['name'] }}" value="{{ type['url'] }}" onclick="filterType(this.id)" checked>
+                                                <label class="form-check-label" for="type-{{ type['name'] }}" style="text-transform:capitalize;">{{ type['name'] }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -63,7 +81,7 @@
         <div class="container pt-3">
             <h3 class="text-center">Pokédex</h3>
             <div id="pokedex" class="row row-cols-6">
-                {% for pokemon in MainPokeData %}
+                {% for pokemon in PokeData[1] %}
                     <a id="poke{{ pokemon['id'] }}" class="col-6 col-sm-4 col-md-4 col-lg-2 grow-effect btn" role="button" onclick="onSelect({{ pokemon }}, this.id)">
                         <img class="mx-auto d-block" src="{{ pokemon['img'] }}">
                         <p id="poke-id" class="text-center fw-bold">#{{ pokemon['id'] }}</p>

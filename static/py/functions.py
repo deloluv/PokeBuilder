@@ -38,7 +38,11 @@ def load_all():
             MainPokeData[i]['id'] = curID
             MainPokeData[i]['img'] = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{curID}.png"
             MainPokeData[i]['name'] = MainPokeData[i]['name'].capitalize()
-    return [AllPokeData, MainPokeData]
+    # Load all Type Data
+    AllPokeTypes = requests.get(f'{mainUrl}type').json()['results'][:-2]
+    # Load all Gen Data
+    AllPokeGens = requests.get(f'{mainUrl}generation').json()['results']
+    return [AllPokeData, MainPokeData, AllPokeTypes, AllPokeGens]
 
 def load_team(query_list):
     Team = []

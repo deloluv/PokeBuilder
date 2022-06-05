@@ -59,15 +59,16 @@ async function checkDataStore(type, data) {
     } else if (type == 'types') {
         if (DATASTORE['types'][data].hasOwnProperty('damage_relations')) {
             // Returns DataStore Entry
-            return DATASTORE['types'][data]['damage_relations']
+            return DATASTORE['types'][data]
         } else {
             // Fetches Type Entry
             await d3.json(`https://pokeapi.co/api/v2/type/${data}`)
                 .then(res => {
                     // Update DataStore
+                    DATASTORE['types'][data]['pokemon'] = res['pokemon']
                     DATASTORE['types'][data]['damage_relations'] = res['damage_relations'];
                     // Returns DataStore Entry
-                    return DATASTORE['types'][data]['damage_relations'];
+                    return DATASTORE['types'][data];
                 });
         };
     }
@@ -430,7 +431,6 @@ function removeAll() {
 
 // COMPLETE
 async function onSelect(pokemon, elementID) {
-    console.log(DATASTORE)
     const CUR_POKEMON = d3.select(`#${elementID}`);
     if (CUR_POKEMON.classed('selected')) {
         // Deselecting
@@ -476,9 +476,45 @@ function filterSearch(query) {
     };
 };
 
-// IN PROGRESS
-function filterType(query) {
+// COMPLETE
+async function filterType(query) {
+    // Selections
+    const NAME = query.slice(5);
+    const FILTER_SELECT = d3.select('#filters')
+        .select('#filter-type')
+        .select(`#${query}`);
+    const POKEDEX = d3.select('#pokedex');
+    // Data
+    await checkDataStore('types', NAME);
+    const TYPE_DATA = DATASTORE['types'][NAME]['pokemon'];
+    // Filter
+    for (let i = 0; i < TYPE_DATA.length; i++) {
+        const CUR_DATA = TYPE_DATA[i]['pokemon'];
+        const POKE_URL = CUR_DATA['url'];
+        const POKE_ID = parseInt(POKE_URL.slice(34, -1));
+        if (POKE_ID > 898) { continue };
+        if (!FILTER_SELECT.property('checked')) {
+            POKEDEX.select(`#poke${POKE_ID}`)
+                .style('display', 'none');
+        } else {
+            POKEDEX.select(`#poke${POKE_ID}`)
+                .style('display', 'block');
+        };
+    };
+};
 
+function filterTypeAll(query) {
+    const POKEDEX = d3.select('#pokedex').selectAll('a');
+    const FILTER_SWITCHES = d3.select('#filters')
+        .select('#filter-type')
+        .selectAll('input');
+    if (!query) {
+        FILTER_SWITCHES.property('checked', false);
+        POKEDEX.style('display', 'none');
+    } else {
+        FILTER_SWITCHES.property('checked', true);
+        POKEDEX.style('display', 'block');
+    };
 };
 
 // IN PROGRESS

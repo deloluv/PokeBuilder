@@ -20,6 +20,12 @@
 .text-effect-hover:hover {
     color: skyblue;
 }
+.hover-effect {
+    border-color: lightgray;
+}
+.hover-effect:hover {
+    border-color: darkgray;
+}
 /* Color Changes */
 .super-effective {
     border-color: lightgreen !important;
